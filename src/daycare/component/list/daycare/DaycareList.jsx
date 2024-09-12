@@ -1,15 +1,19 @@
-function DaycareList(props){
-    return(
-        <div class="card">
-            <div class="card-body">
-                {props.data.map((daycare) => {
-                    return(
-                        <BbsItem
-                            key={daycare.id}
-                            data={daycare}/>
-                    );
-                })}
-            </div>
+import DaycareItem from "./DaycareItem";
+
+function DaycareList({ data }) {
+
+    return (
+        <div className="card">
+            {data && data.length > 0 ? (
+                data.map((daycare) => (
+                    <DaycareItem
+                        key={daycare.id} 
+                        data={daycare}
+                    />
+                ))
+            ) : (
+                <p>데이터가 없습니다.</p>
+            )}
         </div>
     );
 }

@@ -1,4 +1,100 @@
+import api from "../api/axios";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 function SignupPage() {
+    const navigate = useNavigate();
+    const [id, setId] = useState('');
+    const [pwd, setPwd] = useState('');
+    const [pwdCheck, setPwdCheck] = useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [idCheck, setIdCheck] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+    useEffect(() => {
+        setIsButtonDisabled(idCheck);
+    },);
+
+    const idHandler = (e) => {
+        setId(e.target.value)
+    }
+
+    const pwdHandler = (e) => {
+        setPwd(e.target.value)
+    }
+
+    const pwdCheckHandler = (e) => {
+        setPwdCheck(e.target.value)
+    }
+
+    const nameHandler = (e) => {
+        setName(e.target.value)
+    }
+
+    const emailHandler = (e) => {
+        setEmail(e.target.value)
+    }
+
+    const phoneHandler = (e) => {
+        setPhone(e.target.value)
+    }
+
+    const idChecking = async () => {
+        try {
+            const response = await api.get(`daycare/signup/idCheck/${id}`);
+            console.log("debug >>> axios idCheck get OK!!, ", response.data);
+
+            if (response.data === true) {
+                alert("이미 존재하는 아이디입니다.");
+                setIdCheck(false);
+            } else if (response.data === false) {
+                alert("사용 가능한 아이디입니다.");
+                setIdCheck(true);
+            } else {
+                console.error("Unexpected response value:", response.data);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const signupSave = async() => {
+        if(id.length === 0 || pwd.length === 0 || name.length === 0 || email.length === 0 || phone.length === 0){
+            alert("모든 란을 채워주세요.");
+        }else{
+            if(idCheck !== true){
+                alert("아이디 중복확인을 해주세요.");
+            }else if(pwd !== pwdCheck){
+                alert("비밀번호를 다시 확인해주세요.");
+            }else{
+                const data = {
+                    id : id,
+                    pwd : pwd,
+                    name : name,
+                    email : email,
+                    phone: phone
+                };
+                try{
+                    const response = await api.post('daycare/signup', data);
+                    console.log("debug >>> axios post response data, ", response);
+                    if(response.status == 204){
+                        alert("회원가입이 완료되었습니다.");
+                        navigate("/");
+                    }else{
+                        alert("데이터 저장 오류 발생");
+                    }
+                    
+                }catch(err){
+                    console.log(err);
+                }
+            }
+        }
+        
+    
+    }
+
     return (
         <div
             className="container"
@@ -21,13 +117,17 @@ function SignupPage() {
                         alignItems: 'center',     // 가로 방향 중앙 정렬
                     }}
                 >
-                    <div    class="input-group"
+                    <div    className="input-group"
                             style={{    height: '70px'}}>
                         <input  type="text" 
-                                class="form-control" 
+                                className="form-control" 
                                 placeholder="아이디"
+                                value={id}
+                                onChange={idHandler}
                                 style={{    fontSize: '1.3rem'}}/> 
                         <button className="btn btn-primary"
+                                onClick={(e) => {idChecking()}}
+                                disabled={isButtonDisabled}
                                 style={{    width: '120px',
                                             backgroundColor: '#4CAF50',
                                             borderColor: '#4CAF50', 
@@ -39,6 +139,8 @@ function SignupPage() {
                         type="password"
                         className="form-control"
                         placeholder="비밀번호"
+                        value={pwd}
+                        onChange={pwdHandler}
                         style={{
                             fontSize: '1.3rem',
                             marginTop: '20px',
@@ -50,6 +152,8 @@ function SignupPage() {
                         type="password"
                         className="form-control"
                         placeholder="비밀번호 확인"
+                        value={pwdCheck}
+                        onChange={pwdCheckHandler}
                         style={{
                             fontSize: '1.3rem',
                             marginTop: '20px',
@@ -61,6 +165,8 @@ function SignupPage() {
                         type="text"
                         className="form-control"
                         placeholder="닉네임"
+                        value={name}
+                        onChange={nameHandler}
                         style={{
                             fontSize: '1.3rem',
                             marginTop: '20px',
@@ -72,6 +178,8 @@ function SignupPage() {
                         type="text"
                         className="form-control"
                         placeholder="이메일"
+                        value={email}
+                        onChange={emailHandler}
                         style={{
                             fontSize: '1.3rem',
                             marginTop: '20px',
@@ -80,8 +188,10 @@ function SignupPage() {
                         }}
                     />
                     <input
-                        type="text"
+                        type="phone"
                         className="form-control"
+                        value={phone}
+                        onChange={phoneHandler}
                         placeholder="전화번호 ('-'를 제외한 11자리 숫자)"
                         style={{
                             fontSize: '1.3rem',
@@ -91,8 +201,9 @@ function SignupPage() {
                         }}
                     />
                     <button
-                        type="button"
+                        type="text"
                         className="btn btn-primary"
+                        onClick={(e) => signupSave()}
                         style={{
                             backgroundColor: '#4CAF50',
                             borderColor: '#4CAF50',
@@ -102,7 +213,7 @@ function SignupPage() {
                             height: '70px',
                         }}
                     >
-                        로그인
+                        회원가입
                     </button>
                 </div>
             </div>
