@@ -6,17 +6,20 @@ import LoginPage from './daycare/component/pages/LoginPage';
 import SignupPage from './daycare/component/pages/SignupPage';
 import Navbar from './daycare/component/ui/Navbar';
 
+import { AuthProvider } from './daycare/context/AuthContext';
+
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<SearchPage/>}></Route>
-        <Route path="/login" element={<LoginPage/>}></Route>
-        <Route path="/signup" element={<SignupPage/>}></Route>
-      </Routes>
-    </BrowserRouter>
-
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<SearchPage/>}></Route>
+          <Route path="/login" element={<LoginPage/>}></Route>
+          <Route path="/signup" element={<SignupPage/>}></Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

@@ -1,25 +1,43 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../../css/Navbar.css'; 
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
-  // 현재 활성화된 링크 상태를 저장하는 state
-  const [activeLink, setActiveLink] = useState('/');
+    const navigate = useNavigate();
+    const [activeLink, setActiveLink] = useState('/');
+    const {user, setUser} = useAuth();
 
-  // 메뉴 클릭 시 활성화된 링크를 업데이트하는 함수
-  const handleLinkClick = (path) => {
-    setActiveLink(path);
-  };
+    const handleLinkClick = (path) => {
+        setActiveLink(path);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('user'); 
+        setUser(null); 
+        alert('로그아웃 되었습니다.');
+        navigate('/login'); 
+    };
+
 
   return (
     <div>
-        <div className="d-flex justify-content-end p-2">
-            <Link to="/login" className="nav-login">
-            로그인
-            </Link>
-            <Link to="/signup" className="nav-login">
-            회원가입
-            </Link>
+        <div className="d-flex justify-content-end p-2 align-items-center">
+            {user ? (
+                <>
+                    <span   className="nav-welcome"
+                            style={{    marginRight: '20px',
+                                        fontSize: '1.1rem'
+                            }}>{user.name}님 안녕하세요.</span>
+                    <Link to="/" className="nav-login" onClick={handleLogout}>로그아웃</Link>
+                </>
+            ) : (
+                <>
+                    <Link to="/login" className="nav-login">로그인</Link>
+                    <Link to="/signup" className="nav-login">회원가입</Link>
+                </>
+            )}
         </div>
         <ul className="nav justify-content-center">
             <Link to="/" className="navbar-brand">

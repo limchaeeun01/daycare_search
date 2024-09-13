@@ -44,7 +44,7 @@ function SignupPage() {
     const idChecking = async () => {
         try {
             const response = await api.get(`daycare/signup/idCheck/${id}`);
-            console.log("debug >>> axios idCheck get OK!!, ", response.data);
+            console.log("debug >>> 아이디 중복 확인 요청 응답 ", response.data);
 
             if (response.data === true) {
                 alert("이미 존재하는 아이디입니다.");
@@ -78,7 +78,7 @@ function SignupPage() {
                 };
                 try{
                     const response = await api.post('daycare/signup', data);
-                    console.log("debug >>> axios post response data, ", response);
+                    console.log("debug >>> 회원가입 요청 응답 ", response);
                     if(response.status == 204){
                         alert("회원가입이 완료되었습니다.");
                         navigate("/");

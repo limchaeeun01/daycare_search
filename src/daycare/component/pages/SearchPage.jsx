@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from "../api/axios";
 import '../../css/styles.css'; 
 import { useState } from 'react'; 
 import DaycareList from '../list/daycare/DaycareList';
@@ -17,18 +17,14 @@ function SearchPage() {
 
     const getData = async () => {
         try {
-            const response = await axios.get('http://openapi.seoul.go.kr:8088/5a696a4a6b74776f33377172777252/json/ChildCareInfo/1/5/');
-            console.log("API Response:", response.data); // 데이터 구조를 로그로 확인
-            const childCareInfo = response.data.ChildCareInfo;
-            const daycareList = childCareInfo.row.map(item => ({
-                id: item.STCODE,
-                name: item.CRNAME,
-                address: item.CRADDR || '주소 정보 없음',
-                phone: item.CRTELNO || '전화번호 정보 없음'
-            }));
-            setData(daycareList); 
-        } catch (err) {
-            console.error(err); 
+            const response = await api.post('/daycare/api/search', {
+                sigun : "강서구",
+                type : "가정",
+                name : "사랑"
+            });
+            console.log(response.data); // 서버에서 받아온 결과 설정
+        } catch (error) {
+            console.error('검색 실패:', error);
         }
     };
     
