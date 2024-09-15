@@ -1,11 +1,20 @@
+import {useNavigate } from "react-router-dom";
+
 function DaycareItem({ data }) {
+    const navigate = useNavigate();
 
     if (!data) {
         return <div>유치원 정보가 없습니다.</div>;
     }
 
+    const moveHandler = (data) => {
+        console.log("debug >>> button click");
+        navigate(`daycare-view/${data.STCODE}`, { state: { daycareData: data } });
+    }
+
     return (
         <div    className="card"
+                onClick={() => moveHandler(data)}
                 style={{ marginBottom: '20px'}}>
             <div    className="card-header"
                     style={{
@@ -17,7 +26,7 @@ function DaycareItem({ data }) {
                     }}>
                 <div
                     style={{ marginLeft: '5px' }}>
-                    {data.name || '이름 정보 없음'}
+                    {data.CRNAME || '이름 정보 없음'}
                 </div>
                 <div style={{
                         display: 'flex',
@@ -43,10 +52,10 @@ function DaycareItem({ data }) {
                     }}>
                 <p className="card-text"
                    style={{ fontSize: '1.2rem'}}>
-                    주소: {data.address || '주소 정보 없음'}
+                    주소: {data.CRADDR || '주소 정보 없음'}
                 </p>
                 <img
-                    src="/icon/heart-on-icon.png"
+                    src="/icon/heart-off-icon.png"
                     style={{
                         height: '40px',
                         marginLeft: 'auto'

@@ -35,3 +35,27 @@ body {
     background-color: #45a049 !important; /* 호버 시 배경색 변경 */
     border-color: #45a049 !important; /* 호버 시 테두리 색상 변경 */
 }
+
+/* pagination 컴포넌트의 스타일 */
+.pagination {
+    background-color: #f8f9fa; /* 페이지 네비게이션의 배경색 (변경하지 않음) */
+    font-size: 1.25rem;
+}
+
+.page-link {
+    color: #2e8c31; /* 기본 링크 색상 */
+    font-size: 1.2rem; /* 페이지 링크의 폰트 크기 조정 */
+    border-radius: 5px; /* 페이지 링크의 모서리 둥글게 */
+}
+
+.page-link:hover,
+.page-link:focus {
+    color: #4CAF50; /* 마우스 호버 및 포커스 상태 색상 */
+    background-color: rgba(76, 175, 80, 0.1); /* 호버 및 포커스 시 배경색 (선택적) */
+}
+
+.page-item.active .page-link {
+background-color: #4CAF50; /* 선택된 페이지의 배경색 */
+    color: white; /* 선택된 페이지 링크의 텍스트 색상 */
+}
+  
