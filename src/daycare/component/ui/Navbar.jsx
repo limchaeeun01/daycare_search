@@ -12,10 +12,11 @@ function Navbar() {
     const handleLinkClick = (path) => {
         if (path === '/myPage' && !user) {
             alert('로그인이 필요한 서비스입니다.');
-            navigate('/login');
-            return;
+            navigate('/login'); 
+            return; 
         }
-        setActiveLink(path); 
+        setActiveLink(path);
+        navigate(path);
     };
 
     const handleLogout = () => {
@@ -72,13 +73,12 @@ function Navbar() {
                 </Link>
             </li>
             <li className="nav-item">
-                <Link
-                className={`nav-link ${activeLink === '/myPage' ? 'active' : ''}`}
-                to="/myPage"
-                onClick={() => handleLinkClick('/myPage')}
-                >
-                마이페이지
-                </Link>
+                <button
+                        className={`nav-link ${activeLink === '/myPage' ? 'active' : ''}`}
+                        onClick={() => handleLinkClick('/myPage')}
+                    >
+                        마이페이지
+                </button>
             </li>
         </ul>
     </div>
