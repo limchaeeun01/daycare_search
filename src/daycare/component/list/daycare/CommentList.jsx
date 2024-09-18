@@ -1,8 +1,8 @@
-import ReviewItem from "./ReviewItem";
+import CommentItem from "./CommentItem";
 import { useState, useEffect } from 'react';
 import '../../../css/styles.css';  
 
-function ReviewList({ data }) {
+function CommentList({ data }) {
     const itemsPerPage = 5;    // 한 페이지 당 아이템 수
     const totalPages = Math.ceil(data.length / itemsPerPage);
     const [currentPage, setCurrentPage] = useState(1);
@@ -19,15 +19,15 @@ function ReviewList({ data }) {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
             {currentData.length > 0 ? (
-                currentData.map((review, index) => (
-                    <ReviewItem
-                        key={index}
-                        data={review}
+                currentData.map((comment) => (
+                    <CommentItem
+                        key={comment.commentId}
+                        data={comment}
                     />
                 ))
             ) : (
                 <p style={{ fontSize: '1.2rem', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                    해당 어린이집에 대한 첫 후기를 남겨보세요!
+                    해당 게시물에 대한 첫 댓글을 남겨보세요!
                 </p>
             )}
 
@@ -60,4 +60,4 @@ function ReviewList({ data }) {
     );
 }
 
-export default ReviewList;
+export default CommentList;

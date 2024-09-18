@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from "../../api/axios";
 
-function ReviewItem({ data }) {
+function CommentItem({ data }) {
     const [userName, setUserName] = useState('');
     
     const getUser = async () => {
@@ -46,18 +46,6 @@ function ReviewItem({ data }) {
                         {userName}
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img
-                            src="/icon/star-icon.png"
-                            style={{
-                                height: '22px',
-                                marginRight: '5px'
-                            }}
-                        />
-                        <p className="card-text" style={{ fontSize: '1.3rem', marginLeft: '2px'}}>
-                            {parseFloat(data.rating).toFixed(1)}
-                        </p>
-                    </div>
                 </div>
 
                 <div>
@@ -84,4 +72,4 @@ function ReviewItem({ data }) {
     );
 }
 
-export default ReviewItem;
+export default CommentItem;

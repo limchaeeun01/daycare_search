@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
@@ -15,6 +15,17 @@ function DaycareViewPage(){
     const [content, setContent] = useState('');
 
     const [reviewData, setReviewData] = useState([]);
+    const [averageRating, setAverageRating] = useState(0);
+    const [reviewSize, setReviewSize] = useState(0);
+    
+    const [like, setLike] = useState(false);
+
+    useEffect(() => {
+        if(user !== null){
+            getLike();
+        }
+        getReview();
+    }, []);  
 
     const radioChangeHandler = (e) => {
         setSelectedRating(e.target.value);
@@ -73,15 +84,83 @@ function DaycareViewPage(){
             }
         }
     }
+    
+    const likeHandler = () => {
+        if(user !== null){
+            if(like === true){
+                deleteLike();
+            }else{
+                addLike();
+            }
+        }else{
+            alert("로그인이 필요한 서비스입니다.");
+            navigate('/login');
+        }
+    }
 
+    const getLike = async () => {
+        try {
+            const response = await api.get('/daycare/like', { params: { uid: user.uid, daycareId: daycareData.STCODE } });
+            console.log("debug >>> 좋아요 요청 응답 ", response.data);
+            setLike(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const addLike = async () => {
+        try {
+            const response = await api.post('/daycare/like/add', null, {
+                params: {
+                    uid: parseInt(user.uid, 10),  // Integer로 변환
+                    daycareId: daycareData.STCODE
+                }
+            });
+            console.log("debug >>> 좋아요 추가 요청 응답 ", response.data);
+            setLike(true);
+        } catch (err) {
+            console.error("Error in addLike:", err.response ? err.response.data : err.message);
+        }
+    };
+    
+    
+    const deleteLike = async () => {
+        try {
+            const response = await api.delete('/daycare/like/delete', {
+                params: {
+                    uid: parseInt(user.uid, 10),  // Integer로 변환
+                    daycareId: daycareData.STCODE
+                }
+            });
+            console.log("debug >>> 좋아요 삭제 요청 응답 ", response.data);
+            setLike(false);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    
+    
     const getReview = async () => {
         try {
             const response = await api.get(`/daycare/review/${daycareData.STCODE}`);
             console.log(response.data); // 서버에서 받아온 결과 설정
-            setReviewData(response.data)
+            setReviewData(response.data);
+            calculateAverageRating(response.data);
+            setReviewSize(response.data.length);
         } catch (error) {
             console.error('검색 실패:', error);
         }
+    };
+
+    const calculateAverageRating = (reviews) => {
+        if (reviews.length === 0) {
+            setAverageRating(0);
+            return;
+        }
+        
+        const totalRating = reviews.reduce((acc, review) => acc + parseFloat(review.rating), 0);
+        const avgRating = totalRating / reviews.length;
+        setAverageRating(avgRating.toFixed(1)); 
     };
 
     return(
@@ -95,11 +174,13 @@ function DaycareViewPage(){
                         {daycareData.CRNAME}
                     </p>
                     <img
-                        src="/icon/heart-off-icon.png"
+                        src={like ? "/icon/heart-on-icon.png" : "/icon/heart-off-icon.png"}
+                        onClick={likeHandler}
                         style={{
                             height: '40px',
                             marginBottom: '15px',
-                            marginLeft: '10px'
+                            marginLeft: '10px',
+                            cursor: 'pointer'
                         }}/>
                 </div> 
                 <div class="container text-start" style={{ fontSize: '1.3rem', marginTop: '15px' }}> 
@@ -169,7 +250,7 @@ function DaycareViewPage(){
                             marginRight: '8px'
                         }}/>
                         <p  style={{ fontSize: '1.6rem'}}>
-                        4.3 / 5.0 (3)
+                            {averageRating + " / 5.0 (" + reviewSize + ")"}
                         </p>
                     </div> 
                 </div> 
@@ -235,12 +316,13 @@ function DaycareViewPage(){
                     </textarea>
                     </div>
                 </div>
-            </div>
-            <div>
+                <div>
                     <ReviewList
                         data={reviewData}
                     />
                 </div>
+            </div>
+    
             <div style={{ height: '100px' }}></div>
         </div>
     );

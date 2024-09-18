@@ -10,7 +10,12 @@ function Navbar() {
     const {user, setUser} = useAuth();
 
     const handleLinkClick = (path) => {
-        setActiveLink(path);
+        if (path === '/myPage' && !user) {
+            alert('로그인이 필요한 서비스입니다.');
+            navigate('/login');
+            return;
+        }
+        setActiveLink(path); 
     };
 
     const handleLogout = () => {
@@ -19,7 +24,6 @@ function Navbar() {
         alert('로그아웃 되었습니다.');
         navigate('/login'); 
     };
-
 
   return (
     <div>
@@ -42,7 +46,7 @@ function Navbar() {
         <ul className="nav justify-content-center">
             <Link to="/" className="navbar-brand">
             <img
-                src="/logo/logo1.png"
+                src="/logo/logo1 (2).png"
                 alt="Logo"
                 style={{    height: '130px',
                             marginRight: '100px'
@@ -60,25 +64,24 @@ function Navbar() {
             </li>
             <li className="nav-item">
                 <Link
-                className={`nav-link ${activeLink === '/features' ? 'active' : ''}`}
-                to="/features"
-                onClick={() => handleLinkClick('/features')}
+                className={`nav-link ${activeLink === '/community' ? 'active' : ''}`}
+                to="/community"
+                onClick={() => handleLinkClick('/community')}
                 >
                 커뮤니티
                 </Link>
             </li>
             <li className="nav-item">
                 <Link
-                className={`nav-link ${activeLink === '/pricing' ? 'active' : ''}`}
-                to="/pricing"
-                onClick={() => handleLinkClick('/pricing')}
+                className={`nav-link ${activeLink === '/myPage' ? 'active' : ''}`}
+                to="/myPage"
+                onClick={() => handleLinkClick('/myPage')}
                 >
                 마이페이지
                 </Link>
             </li>
         </ul>
     </div>
-    
   );
 }
 

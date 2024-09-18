@@ -137,7 +137,7 @@ function SearchPage() {
                 </div>
             </div>
 
-            <div style={{ height: '100px' }} />
+            <div style={{ height: '50px' }} />
 
             {hasSearched && (
                     <div>
